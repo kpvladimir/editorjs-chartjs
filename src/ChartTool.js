@@ -15,9 +15,11 @@ export default class ChartTool {
     return true;
   }
 
-  constructor({ data, api, readOnly }) {
+  constructor({ data, api, readOnly, config }) {
     this.api = api;
     this.readOnly = readOnly;
+    this.config = config || {};
+    this.saveImage = this.config.saveImage === true;
     // Editor.js passes an empty object for a newly inserted block and saved
     // chart data when restoring a document.
     this.isNewBlock = !data || Object.keys(data).length === 0;
@@ -35,6 +37,9 @@ export default class ChartTool {
       ],
       title: data.title || "",
     };
+    if (this.saveImage && data.image) {
+      this.data.image = data.image;
+    }
 
     this.wrapper = null;
     this.chart = null;
@@ -199,6 +204,13 @@ export default class ChartTool {
     const options = {
       responsive: true,
       maintainAspectRatio: false,
+      ...(this.saveImage
+        ? {
+            animation: {
+              onComplete: ({ chart }) => this._captureChartImage(chart),
+            },
+          }
+        : {}),
       plugins: {
         legend: {
           display: isSegmentBased || this.data.datasets.length > 1,
@@ -724,6 +736,14 @@ export default class ChartTool {
     this._createChart(canvas);
   }
 
+  _captureChartImage(chart = this.chart) {
+    if (!this.saveImage || !chart || chart !== this.chart) {
+      return;
+    }
+
+    this.data.image = chart.toBase64Image();
+  }
+
   _editTitle() {
     // Create temporary input overlay
     const canvas = this.wrapper.querySelector("canvas");
@@ -772,6 +792,14 @@ export default class ChartTool {
   }
 
   save() {
+    if (this.saveImage && this.chart) {
+      // Finish any in-flight animation so the exported image matches the
+      // latest data rather than an intermediate animation frame.
+      this.chart.stop();
+      this.chart.update("none");
+      this._captureChartImage();
+    }
+
     return this.data;
   }
 

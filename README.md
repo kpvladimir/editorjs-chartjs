@@ -15,6 +15,7 @@ A Chart.js integration plugin for Editor.js that allows you to create charts rig
 -   **Multiple Datasets**: Support for multiple data sets (in non-segmented charts)
 -   **Collapsible Settings**: Hide the chart editor to keep documents compact; newly inserted charts open with settings visible, while saved charts open with settings hidden
 -   **Localization**: All plugin interface text uses the Editor.js I18n API
+-   **Optional PNG Snapshot**: Include the rendered chart image in the block data when saving
 
 ## Installation
 
@@ -126,6 +127,26 @@ const editor = new EditorJS({
 ```
 
 Editor.js translates only the strings provided in the dictionary. Untranslated plugin strings remain in English. The demo's `index.html` contains a complete Russian dictionary.
+
+### Save Chart Images
+
+By default, the plugin saves only the chart configuration and data. To also save a PNG snapshot in the Editor.js block data, enable `saveImage` in the tool config:
+
+```javascript
+const editor = new EditorJS({
+	holder: 'editorjs',
+	tools: {
+		chart: {
+			class: ChartTool,
+			config: {
+				saveImage: true,
+			},
+		},
+	},
+});
+```
+
+When enabled, each chart block's saved `data` includes an `image` property containing a PNG Data URL (`data:image/png;base64,...`). The snapshot is refreshed when the chart finishes rendering and immediately before `editor.save()` returns, so the saved image reflects the latest data. PNG Data URLs increase the document JSON size; disable `saveImage` when you only need chart data.
 
 ## Development
 
