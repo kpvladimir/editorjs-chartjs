@@ -1,330 +1,377 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Editor.js Chart.js - Demo</title>
-		<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
-		<style>
-			* {
-				box-sizing: border-box;
-			}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editor.js Chart.js - Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-			body {
-				margin: 0;
-				padding: 20px;
-				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-					Oxygen, Ubuntu, Cantarell, sans-serif;
-				background: #f5f5f5;
-			}
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        background: #f5f5f5;
+      }
 
-			.header {
-				max-width: 900px;
-				margin: 0 auto 20px auto;
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-			}
+      .header {
+        max-width: 900px;
+        margin: 0 auto 20px auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-			.header-text {
-				flex: 1;
-			}
+      .header-text {
+        flex: 1;
+      }
 
-			.readonly-toggle {
-				display: flex;
-				align-items: center;
-				gap: 12px;
-				background: white;
-				padding: 12px 20px;
-				border-radius: 8px;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			}
+      .readonly-toggle {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-			.readonly-toggle label {
-				font-size: 14px;
-				font-weight: 500;
-				color: #666;
-				cursor: pointer;
-				user-select: none;
-			}
+      .readonly-toggle label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #666;
+        cursor: pointer;
+        user-select: none;
+      }
 
-			.switch {
-				position: relative;
-				display: inline-block;
-				width: 48px;
-				height: 26px;
-			}
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 26px;
+      }
 
-			.switch input {
-				opacity: 0;
-				width: 0;
-				height: 0;
-			}
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
 
-			.slider {
-				position: absolute;
-				cursor: pointer;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				background-color: #ccc;
-				transition: 0.3s;
-				border-radius: 26px;
-			}
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.3s;
+        border-radius: 26px;
+      }
 
-			.slider:before {
-				position: absolute;
-				content: '';
-				height: 18px;
-				width: 18px;
-				left: 4px;
-				bottom: 4px;
-				background-color: white;
-				transition: 0.3s;
-				border-radius: 50%;
-			}
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
 
-			input:checked + .slider {
-				background-color: #3f8ae0;
-			}
+      input:checked + .slider {
+        background-color: #3f8ae0;
+      }
 
-			input:checked + .slider:before {
-				transform: translateX(22px);
-			}
+      input:checked + .slider:before {
+        transform: translateX(22px);
+      }
 
-			.container {
-				max-width: 900px;
-				margin: 0 auto;
-				background: white;
-				padding: 40px;
-				border-radius: 12px;
-				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-			}
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+      }
 
-			h1 {
-				margin: 0 0 10px 0;
-				font-size: 32px;
-				color: #1a1a1a;
-			}
+      h1 {
+        margin: 0 0 10px 0;
+        font-size: 32px;
+        color: #1a1a1a;
+      }
 
-			.subtitle {
-				color: #666;
-				font-size: 16px;
-			}
+      .subtitle {
+        color: #666;
+        font-size: 16px;
+      }
 
-			#editorjs {
-				background: #fff;
-				min-height: 400px;
-			}
+      #editorjs {
+        background: #fff;
+        min-height: 400px;
+      }
 
-			/* .ce-block__content {
+      /* .ce-block__content {
 				max-width: 100%;
 			} */
 
-			.codex-editor__redactor {
-				padding-bottom: 200px !important;
-			}
+      .codex-editor__redactor {
+        padding-bottom: 200px !important;
+      }
 
-			.save-button {
-				margin-top: 20px;
-				padding: 12px 24px;
-				background: #3f8ae0;
-				color: white;
-				border: none;
-				border-radius: 6px;
-				cursor: pointer;
-				font-size: 14px;
-				font-weight: 500;
-				transition: background 0.2s ease;
-			}
+      .save-button {
+        margin-top: 20px;
+        padding: 12px 24px;
+        background: #3f8ae0;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background 0.2s ease;
+      }
 
-			.save-button:hover {
-				background: #357abd;
-			}
+      .save-button:hover {
+        background: #357abd;
+      }
 
-			pre {
-				background: #f4f4f4;
-				padding: 15px;
-				border-radius: 6px;
-				overflow-x: auto;
-				margin-top: 20px;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="header">
-			<div class="header-text">
-				<h1>Chart.js plugin for Editor.js</h1>
-				<p class="subtitle">Integrating Chat.js into Editor.js</p>
-			</div>
-			<div class="readonly-toggle">
-				<label for="readonly-switch">Read Only</label>
-				<label class="switch">
-					<input
-						type="checkbox"
-						id="readonly-switch"
-						onchange="toggleReadOnly(this.checked)"
-					/>
-					<span class="slider"></span>
-				</label>
-			</div>
-		</div>
-		<div class="container">
-			<div id="editorjs"></div>
+      pre {
+        background: #f4f4f4;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-text">
+        <h1>Chart.js plugin for Editor.js</h1>
+        <p class="subtitle">Integrating Chat.js into Editor.js</p>
+      </div>
+      <div class="readonly-toggle">
+        <label for="readonly-switch">Read Only</label>
+        <label class="switch">
+          <input
+            type="checkbox"
+            id="readonly-switch"
+            onchange="toggleReadOnly(this.checked)"
+          />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="container">
+      <div id="editorjs"></div>
 
-			<button class="save-button" id="saveButton" onclick="saveData()">
-				Save & View JSON
-			</button>
-			<pre id="output" style="display: none"></pre>
-		</div>
+      <button class="save-button" id="saveButton" onclick="saveData()">
+        Save & View JSON
+      </button>
+      <pre id="output" style="display: none"></pre>
+    </div>
 
-		<script type="module">
-			import ChartTool from './src/index.js';
+    <script type="module">
+      import ChartTool from "./src/index.js";
 
-			let editor;
-			let editorData = null; // Store editor data for read-only toggle
+      const editorI18n = {
+        messages: {
+          toolNames: {
+            Chart: "Диаграмма",
+          },
+          tools: {
+            chart: {
+              "Click to edit title": "Нажмите, чтобы изменить заголовок",
+              "Edit chart": "Изменить диаграмму",
+              "Hide settings": "Скрыть настройки",
+              "Show chart settings": "Показать настройки диаграммы",
+              "Labels (comma-separated)": "Подписи (через запятую)",
+              "+ Add Dataset": "+ Добавить набор данных",
+              Dataset: "Набор данных",
+              Data: "Данные",
+              "Remove dataset": "Удалить набор данных",
+              Name: "Название",
+              "Enter dataset name": "Введите название набора данных",
+              Values: "Значения",
+              "Enter values separated by commas":
+                "Введите значения через запятую",
+              Color: "Цвет",
+              "Per value": "Для каждого значения",
+              Segments: "Сегменты",
+              "Values & Colors": "Значения и цвета",
+              Value: "Значение",
+              "Click to change color": "Нажмите, чтобы изменить цвет",
+              "Enter chart title...": "Введите заголовок диаграммы...",
+              "Bar Chart": "Столбчатая диаграмма",
+              "Line Chart": "Линейная диаграмма",
+              "Pie Chart": "Круговая диаграмма",
+              "Doughnut Chart": "Кольцевая диаграмма",
+              "Radar Chart": "Лепестковая диаграмма",
+              "Polar Area Chart": "Полярная диаграмма",
+              "This chart type only supports a single dataset.":
+                "Этот тип диаграммы поддерживает только один набор данных.",
+              "Switching will keep only the first dataset and discard the others.":
+                "После переключения останется только первый набор данных, остальные будут удалены.",
+              "Do you want to continue?": "Продолжить?",
+            },
+          },
+        },
+      };
 
-			function initEditor(readOnly = false) {
-				const editorHolder = document.getElementById('editorjs');
-				editorHolder.innerHTML = ''; // Clear previous editor
+      let editor;
+      let editorData = null; // Store editor data for read-only toggle
 
-				const initialData = editorData || {
-					blocks: [
-						// {
-						// 	type: 'header',
-						// 	data: {
-						// 		text: 'Example Chart Block',
-						// 		level: 2,
-						// 	},
-						// },
-						// {
-						// 	type: 'paragraph',
-						// 	data: {
-						// 		text: 'Below is an example chart block',
-						// 	},
-						// },
-						{
-							type: 'chart',
-							data: {
-								type: 'bar',
-								title: 'Quarterly Sales 2024',
-								labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-								datasets: [
-									{
-										label: 'Revenue',
-										data: [45000, 52000, 61000, 58000],
-										backgroundColor: '#4A90E2',
-									},
-								],
-							},
-						},
-					],
-				};
+      function initEditor(readOnly = false) {
+        const editorHolder = document.getElementById("editorjs");
+        editorHolder.innerHTML = ""; // Clear previous editor
 
-				editor = new EditorJS({
-					holder: 'editorjs',
-					readOnly: readOnly,
-					tools: {
-						header: {
-							class: Header,
-							inlineToolbar: true,
-						},
-						paragraph: {
-							class: Paragraph,
-							inlineToolbar: true,
-						},
-						chart: {
-							class: ChartTool,
-						},
-					},
-					placeholder: 'Start writing or click + to add a chart...',
-					data: initialData,
-				});
-			}
+        const initialData = editorData || {
+          blocks: [
+            {
+              type: "header",
+              data: {
+                text: "Example Chart Block",
+                level: 2,
+              },
+            },
+            {
+              type: "paragraph",
+              data: {
+                text: "Below is an example chart block",
+              },
+            },
+            {
+              type: "chart",
+              data: {
+                type: "bar",
+                title: "Quarterly Sales 2024",
+                labels: ["Q1", "Q2", "Q3", "Q4"],
+                datasets: [
+                  {
+                    label: "Revenue",
+                    data: [45000, 52000, 61000, 58000],
+                    backgroundColor: "#4A90E2",
+                  },
+                ],
+              },
+            },
+          ],
+        };
 
-			// Initialize editor on load
-			initEditor();
+        editor = new EditorJS({
+          holder: "editorjs",
+          readOnly: readOnly,
+          tools: {
+            header: {
+              class: Header,
+              inlineToolbar: true,
+            },
+            paragraph: {
+              class: Paragraph,
+              inlineToolbar: true,
+            },
+            chart: {
+              class: ChartTool,
+            },
+          },
+          placeholder: "Start writing or click + to add a chart...",
+          i18n: editorI18n,
+          data: initialData,
+        });
+      }
 
-			window.toggleReadOnly = async (isReadOnly) => {
-				if (editor) {
-					try {
-						// Ensure editor is fully ready before destroying
-						await editor.isReady;
+      // Initialize editor on load
+      initEditor();
 
-						// Save current state before switching (only if in edit mode)
-						if (editor.readOnly && editor.readOnly.isEnabled) {
-							// Currently in read-only, switching to edit mode
-							// Data is already stored, do nothing
-						} else {
-							// Currently in edit mode, save before switching
-							editorData = await editor.save();
-						}
+      window.toggleReadOnly = async (isReadOnly) => {
+        if (editor) {
+          try {
+            // Ensure editor is fully ready before destroying
+            await editor.isReady;
 
-						// Destroy and clear
-						await editor.destroy();
-						const editorHolder = document.getElementById('editorjs');
-						editorHolder.innerHTML = '';
+            // Save current state before switching (only if in edit mode)
+            if (editor.readOnly && editor.readOnly.isEnabled) {
+              // Currently in read-only, switching to edit mode
+              // Data is already stored, do nothing
+            } else {
+              // Currently in edit mode, save before switching
+              editorData = await editor.save();
+            }
 
-						// Small delay for cleanup
-						await new Promise((resolve) => setTimeout(resolve, 100));
+            // Destroy and clear
+            await editor.destroy();
+            const editorHolder = document.getElementById("editorjs");
+            editorHolder.innerHTML = "";
 
-						// Reinitialize with new readOnly state
-						editor = new EditorJS({
-							holder: 'editorjs',
-							readOnly: isReadOnly,
-							tools: {
-								header: {
-									class: Header,
-									inlineToolbar: true,
-								},
-								paragraph: {
-									class: Paragraph,
-									inlineToolbar: true,
-								},
-								chart: {
-									class: ChartTool,
-								},
-							},
-							data: editorData,
-						});
+            // Small delay for cleanup
+            await new Promise((resolve) => setTimeout(resolve, 100));
 
-						// Wait for editor to be ready
-						await editor.isReady;
+            // Reinitialize with new readOnly state
+            editor = new EditorJS({
+              holder: "editorjs",
+              readOnly: isReadOnly,
+              tools: {
+                header: {
+                  class: Header,
+                  inlineToolbar: true,
+                },
+                paragraph: {
+                  class: Paragraph,
+                  inlineToolbar: true,
+                },
+                chart: {
+                  class: ChartTool,
+                },
+              },
+              i18n: editorI18n,
+              data: editorData,
+            });
 
-						// Update button text based on read-only mode
-						const saveButton = document.getElementById('saveButton');
-						if (isReadOnly) {
-							saveButton.textContent = 'View JSON';
-						} else {
-							saveButton.textContent = 'Save & View JSON';
-						}
-					} catch (error) {
-						console.error('Error toggling read-only mode:', error);
-					}
-				}
-			};
+            // Wait for editor to be ready
+            await editor.isReady;
 
-			window.saveData = async () => {
-				// Check if in read-only mode
-				if (editor.readOnly && editor.readOnly.isEnabled) {
-					// Just display the stored data
-					const output = document.getElementById('output');
-					output.textContent = JSON.stringify(editorData, null, 2);
-					output.style.display = 'block';
-					console.log('Editor data (read-only):', editorData);
-				} else {
-					// Save and display
-					const savedData = await editor.save();
-					editorData = savedData; // Update stored data
-					const output = document.getElementById('output');
-					output.textContent = JSON.stringify(savedData, null, 2);
-					output.style.display = 'block';
-					console.log('Editor data:', savedData);
-				}
-			};
-		</script>
-	</body>
+            // Update button text based on read-only mode
+            const saveButton = document.getElementById("saveButton");
+            if (isReadOnly) {
+              saveButton.textContent = "View JSON";
+            } else {
+              saveButton.textContent = "Save & View JSON";
+            }
+          } catch (error) {
+            console.error("Error toggling read-only mode:", error);
+          }
+        }
+      };
+
+      window.saveData = async () => {
+        // Check if in read-only mode
+        if (editor.readOnly && editor.readOnly.isEnabled) {
+          // Just display the stored data
+          const output = document.getElementById("output");
+          output.textContent = JSON.stringify(editorData, null, 2);
+          output.style.display = "block";
+          console.log("Editor data (read-only):", editorData);
+        } else {
+          // Save and display
+          const savedData = await editor.save();
+          editorData = savedData; // Update stored data
+          const output = document.getElementById("output");
+          output.textContent = JSON.stringify(savedData, null, 2);
+          output.style.display = "block";
+          console.log("Editor data:", savedData);
+        }
+      };
+    </script>
+  </body>
 </html>

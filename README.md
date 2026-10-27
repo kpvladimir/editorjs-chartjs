@@ -13,6 +13,8 @@ A Chart.js integration plugin for Editor.js that allows you to create charts rig
 -   **Full Editability**: Edit labels, data values, titles, and colors in real-time
 -   **Color Picker**: Choose from 12 preset colors for your charts
 -   **Multiple Datasets**: Support for multiple data sets (in non-segmented charts)
+-   **Collapsible Settings**: Hide the chart editor to keep documents compact; newly inserted charts open with settings visible, while saved charts open with settings hidden
+-   **Localization**: All plugin interface text uses the Editor.js I18n API
 
 ## Installation
 
@@ -67,6 +69,63 @@ const editor = new EditorJS({
 	},
 });
 ```
+
+### Localization
+
+The plugin uses the Editor.js I18n API for its interface text. Add translations under `i18n.messages.tools.chart`; translate the toolbox name separately under `i18n.messages.toolNames`.
+
+```javascript
+const editor = new EditorJS({
+	holder: 'editorjs',
+	tools: {
+		chart: {
+			class: ChartTool,
+		},
+	},
+	i18n: {
+		messages: {
+			toolNames: {
+				Chart: 'Диаграмма',
+			},
+			tools: {
+				chart: {
+					'Click to edit title': 'Нажмите, чтобы изменить заголовок',
+					'Edit chart': 'Изменить диаграмму',
+					'Hide settings': 'Скрыть настройки',
+					'Show chart settings': 'Показать настройки диаграммы',
+					'Labels (comma-separated)': 'Подписи (через запятую)',
+					'+ Add Dataset': '+ Добавить набор данных',
+					'Dataset': 'Набор данных',
+					'Data': 'Данные',
+					'Remove dataset': 'Удалить набор данных',
+					'Name': 'Название',
+					'Enter dataset name': 'Введите название набора данных',
+					'Values': 'Значения',
+					'Enter values separated by commas': 'Введите значения через запятую',
+					'Color': 'Цвет',
+					'Per value': 'Для каждого значения',
+					'Segments': 'Сегменты',
+					'Values & Colors': 'Значения и цвета',
+					'Value': 'Значение',
+					'Click to change color': 'Нажмите, чтобы изменить цвет',
+					'Enter chart title...': 'Введите заголовок диаграммы...',
+					'Bar Chart': 'Столбчатая диаграмма',
+					'Line Chart': 'Линейная диаграмма',
+					'Pie Chart': 'Круговая диаграмма',
+					'Doughnut Chart': 'Кольцевая диаграмма',
+					'Radar Chart': 'Лепестковая диаграмма',
+					'Polar Area Chart': 'Полярная диаграмма',
+					'This chart type only supports a single dataset.': 'Этот тип диаграммы поддерживает только один набор данных.',
+					'Switching will keep only the first dataset and discard the others.': 'После переключения останется только первый набор данных, остальные будут удалены.',
+					'Do you want to continue?': 'Продолжить?',
+				},
+			},
+		},
+	},
+});
+```
+
+Editor.js translates only the strings provided in the dictionary. Untranslated plugin strings remain in English. The demo's `index.html` contains a complete Russian dictionary.
 
 ## Development
 

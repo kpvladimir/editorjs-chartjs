@@ -1,31 +1,31 @@
 {
-	"name": "editorjs-chartjs",
-	"version": "1.0.2",
-	"description": "A Chart.js integration block",
-	"main": "index.js",
-	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"author": "Alkosik",
-	"keywords": [
-		"codex",
-		"codex-editor",
-		"editor.js",
-		"editorjs",
-		"chart",
-		"chart.js",
-		"data-visualization"
-	],
-	"license": "ISC",
-	"dependencies": {
-		"chart.js": "^4.5.1"
-	},
-	"devDependencies": {
-		"@editorjs/editorjs": "^2.31.0",
-		"@editorjs/header": "^2.8.8",
-		"@editorjs/paragraph": "^2.11.7",
-		"vite": "^7.2.2"
-	}
+  "name": "editorjs-chartjs",
+  "version": "1.0.2",
+  "description": "A Chart.js integration block",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alkosik",
+  "keywords": [
+    "codex",
+    "codex-editor",
+    "editor.js",
+    "editorjs",
+    "chart",
+    "chart.js",
+    "data-visualization"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "chart.js": "^4.6.1"
+  },
+  "devDependencies": {
+    "@editorjs/editorjs": "^2.31.0",
+    "@editorjs/header": "^2.8.8",
+    "@editorjs/paragraph": "^2.11.7",
+    "vite": "^7.2.2"
+  }
 }
