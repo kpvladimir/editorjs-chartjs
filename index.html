@@ -194,7 +194,7 @@
             chart: {
               "Click to edit title": "Нажмите, чтобы изменить заголовок",
               "Edit chart": "Изменить диаграмму",
-              "Hide settings": "Скрыть настройки",
+              "Hide chart settings": "Скрыть настройки диаграммы",
               "Show chart settings": "Показать настройки диаграммы",
               "Labels (comma-separated)": "Подписи (через запятую)",
               "+ Add Dataset": "+ Добавить набор данных",
@@ -219,6 +219,26 @@
               "Doughnut Chart": "Кольцевая диаграмма",
               "Radar Chart": "Лепестковая диаграмма",
               "Polar Area Chart": "Полярная диаграмма",
+              "Saved charts": "Сохранённые диаграммы",
+              "Load saved charts": "Загрузить список",
+              "Load the list to choose a chart": "Выберите диаграмму",
+              Apply: "Применить",
+              "Save chart": "Сохранить диаграмму",
+              "Chart name": "Название диаграммы",
+              Save: "Сохранить",
+              Close: "Закрыть",
+              "Loading saved charts...": "Загрузка сохранённых диаграмм...",
+              "Saved charts loaded": "Список диаграмм загружен",
+              "No saved charts found": "Сохранённые диаграммы не найдены",
+              "Could not load saved charts": "Не удалось загрузить диаграммы",
+              "Selected chart data is invalid":
+                "Данные выбранной диаграммы некорректны",
+              "Chart loaded into the editor": "Диаграмма загружена в редактор",
+              "Enter a name for the chart": "Укажите название диаграммы",
+              "Saving chart...": "Сохранение диаграммы...",
+              "Chart saved": "Диаграмма сохранена",
+              "Could not save chart": "Не удалось сохранить диаграмму",
+              Chart: "Диаграмма",
               "This chart type only supports a single dataset.":
                 "Этот тип диаграммы поддерживает только один набор данных.",
               "Switching will keep only the first dataset and discard the others.":
@@ -283,7 +303,10 @@
             },
             chart: {
               class: ChartTool,
-							config: { saveImage: true },
+              config: {
+                saveImage: true,
+                savedChartsUrl: "http://localhost:3001/charts",
+              },
             },
           },
           placeholder: "Start writing or click + to add a chart...",
@@ -333,7 +356,10 @@
                 },
                 chart: {
                   class: ChartTool,
-								config: { saveImage: true },
+                  config: {
+                    saveImage: true,
+                    savedChartsUrl: "http://localhost:3001/charts",
+                  },
                 },
               },
               i18n: editorI18n,

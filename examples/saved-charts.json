@@ -1,0 +1,52 @@
+{
+  "charts": [
+    {
+      "id": "quarterly-revenue",
+      "name": "Quarterly revenue",
+      "data": {
+        "type": "bar",
+        "title": "Quarterly Revenue",
+        "labels": ["Q1", "Q2", "Q3", "Q4"],
+        "datasets": [
+          {
+            "label": "Revenue",
+            "data": [45000, 52000, 61000, 58000],
+            "backgroundColor": "#4A90E2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "monthly-visitors",
+      "name": "Monthly visitors",
+      "data": {
+        "type": "line",
+        "title": "Monthly Visitors",
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        "datasets": [
+          {
+            "label": "Visitors",
+            "data": [1200, 1550, 1420, 1900, 2250, 2480],
+            "backgroundColor": "#50C878"
+          }
+        ]
+      }
+    },
+    {
+      "id": "market-share",
+      "name": "Market share",
+      "data": {
+        "type": "doughnut",
+        "title": "Market Share",
+        "labels": ["North", "South", "East", "West"],
+        "datasets": [
+          {
+            "label": "Share",
+            "data": [35, 25, 22, 18],
+            "backgroundColor": ["#4A90E2", "#50C878", "#FF6B6B", "#FFD93D"]
+          }
+        ]
+      }
+    }
+  ]
+}

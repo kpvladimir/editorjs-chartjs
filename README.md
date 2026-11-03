@@ -73,7 +73,7 @@ const editor = new EditorJS({
 
 ### Localization
 
-The plugin uses the Editor.js I18n API for its interface text. Add translations under `i18n.messages.tools.chart`; translate the toolbox name separately under `i18n.messages.toolNames`.
+The plugin uses the Editor.js I18n API for its interface text. Add translations under `i18n.messages.tools.chart`; translate the toolbox name separately under `i18n.messages.toolNames`. The demo's `index.html` contains the complete Russian dictionary, including the saved-chart controls.
 
 ```javascript
 const editor = new EditorJS({
@@ -92,7 +92,7 @@ const editor = new EditorJS({
 				chart: {
 					'Click to edit title': 'Нажмите, чтобы изменить заголовок',
 					'Edit chart': 'Изменить диаграмму',
-					'Hide settings': 'Скрыть настройки',
+					'Hide chart settings': 'Скрыть настройки диаграммы',
 					'Show chart settings': 'Показать настройки диаграммы',
 					'Labels (comma-separated)': 'Подписи (через запятую)',
 					'+ Add Dataset': '+ Добавить набор данных',
@@ -116,6 +116,25 @@ const editor = new EditorJS({
 					'Doughnut Chart': 'Кольцевая диаграмма',
 					'Radar Chart': 'Лепестковая диаграмма',
 					'Polar Area Chart': 'Полярная диаграмма',
+					'Saved charts': 'Сохранённые диаграммы',
+					'Load saved charts': 'Загрузить список',
+					'Load the list to choose a chart': 'Загрузите список и выберите диаграмму',
+					'Apply': 'Применить',
+					'Save chart': 'Сохранить диаграмму',
+					'Chart name': 'Название диаграммы',
+					'Save': 'Сохранить',
+					'Close': 'Закрыть',
+					'Loading saved charts...': 'Загрузка сохранённых диаграмм...',
+					'Saved charts loaded': 'Список диаграмм загружен',
+					'No saved charts found': 'Сохранённые диаграммы не найдены',
+					'Could not load saved charts': 'Не удалось загрузить диаграммы',
+					'Selected chart data is invalid': 'Данные выбранной диаграммы некорректны',
+					'Chart loaded into the editor': 'Диаграмма загружена в редактор',
+					'Enter a name for the chart': 'Укажите название диаграммы',
+					'Saving chart...': 'Сохранение диаграммы...',
+					'Chart saved': 'Диаграмма сохранена',
+					'Could not save chart': 'Не удалось сохранить диаграмму',
+					'Chart': 'Диаграмма',
 					'This chart type only supports a single dataset.': 'Этот тип диаграммы поддерживает только один набор данных.',
 					'Switching will keep only the first dataset and discard the others.': 'После переключения останется только первый набор данных, остальные будут удалены.',
 					'Do you want to continue?': 'Продолжить?',
@@ -126,7 +145,7 @@ const editor = new EditorJS({
 });
 ```
 
-Editor.js translates only the strings provided in the dictionary. Untranslated plugin strings remain in English. The demo's `index.html` contains a complete Russian dictionary.
+Editor.js translates only the strings provided in the dictionary. Untranslated plugin strings remain in English.
 
 ### Save Chart Images
 
@@ -147,6 +166,56 @@ const editor = new EditorJS({
 ```
 
 When enabled, each chart block's saved `data` includes an `image` property containing a PNG Data URL (`data:image/png;base64,...`). The snapshot is refreshed when the chart finishes rendering and immediately before `editor.save()` returns, so the saved image reflects the latest data. PNG Data URLs increase the document JSON size; disable `saveImage` when you only need chart data.
+
+### Saved Chart API
+
+Saved chart controls are shown when `savedChartsUrl` is provided. The same URL handles both requests:
+
+- `GET savedChartsUrl` returns a JSON object containing a `charts` array.
+- `POST savedChartsUrl` receives `{ "name": "Quarterly revenue", "data": { ...chartData } }` and creates a saved chart.
+
+Each entry returned by `GET` must contain an `id`, a display `name`, and the Editor.js chart block `data`:
+
+```json
+{
+  "charts": [
+    {
+      "id": "quarterly-revenue",
+      "name": "Quarterly revenue",
+      "data": {
+        "type": "bar",
+        "title": "Quarterly Revenue",
+        "labels": ["Q1", "Q2", "Q3", "Q4"],
+        "datasets": [
+          {
+            "label": "Revenue",
+            "data": [45000, 52000, 61000, 58000],
+            "backgroundColor": "#4A90E2"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+Configure the endpoint in the Editor.js tool settings:
+
+```javascript
+tools: {
+	chart: {
+		class: ChartTool,
+		config: {
+			savedChartsUrl: 'http://localhost:3001/charts',
+			saveImage: true, // Optional: include a PNG Data URL in chart data
+		},
+	},
+}
+```
+
+The plugin sends `Accept: application/json` on `GET` and `Content-Type: application/json` on `POST`. The endpoint must allow cross-origin requests if it runs on a different origin from the editor.
+
+For local testing, the repository includes `examples/saved-charts.json` and a small Node.js mock API. Start it with `node examples/mock-saved-charts-api.mjs`; it serves `http://localhost:3001/charts`, returns the sample chart list, and accepts `POST` requests. New test records are written to `examples/saved-charts.local.json` so the sample file stays unchanged.
 
 ## Development
 
